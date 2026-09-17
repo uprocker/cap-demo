@@ -237,6 +237,20 @@ Make sure the worker contains its host startup code and run it with `dotnet run`
 
 Stop the running API or worker with `Ctrl+C` before rebuilding. A running process can lock files such as `Contracts.dll` and `Inventory.Worker.dll`.
 
+If the process does not stop cleanly, find the process and terminate it from PowerShell:
+
+```powershell
+Get-Process -Name Inventory.Worker,Order.Api
+Stop-Process -Name Inventory.Worker -Force
+Stop-Process -Name Order.Api -Force
+```
+
+You can also terminate one specific process by PID:
+
+```powershell
+Stop-Process -Id <process-id> -Force
+```
+
 ### No messages appear in Azure Service Bus
 
 Messages are held by subscriptions, not directly by the topic. Successful messages may disappear quickly because the worker or API has consumed and completed them. Stop the relevant consumer, send a new order, and use Azure Portal's **Peek** operation to inspect a pending message.
